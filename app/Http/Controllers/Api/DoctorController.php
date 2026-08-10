@@ -1,17 +1,23 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
+use App\Models\Doctor;
+use App\Http\Controllers\Controller;
 
-class DepartmentController extends Controller
+class DoctorController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        $doctors = Doctor::all();
+        return response()->json([
+            'status' => true,
+            'data' => $doctors
+        ], 200);
     }
 
     /**
@@ -27,7 +33,13 @@ class DepartmentController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $doctor = Doctor::find($id);
+
+        if (!$doctor) {
+            return response()->json(['status' => false, 'message' => 'الطبيب غير موجود'], 404);
+        }
+
+        return response()->json(['status' => true, 'data' => $doctor], 200);
     }
 
     /**

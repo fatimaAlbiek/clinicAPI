@@ -1,17 +1,23 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
+use App\Models\Department;
+use App\Http\Controllers\Controller;
 
-class DoctorController extends Controller
+class DepartmentController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        $departments = Department::all();
+        return response()->json([
+            'status' => true,
+            'data' => $departments
+        ], 200);
     }
 
     /**
@@ -27,8 +33,17 @@ class DoctorController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $department = Department::find($id);
+
+
+        if (!$department) {
+            return response()->json(['status' => false, 'message' => 'القسم غير موجود'], 404);
+        }
+
+        return response()->json(['status' => true, 'data' => $department], 200);
     }
+
+
 
     /**
      * Update the specified resource in storage.
