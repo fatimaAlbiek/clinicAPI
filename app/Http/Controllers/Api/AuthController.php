@@ -70,7 +70,7 @@ class AuthController extends Controller
 
 
 
-        if (!$user->approved) {
+        if (!$user->approved) { //0
 
             return response()->json([
                 'message' => 'الحساب غير مفعل'

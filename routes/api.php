@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Api\DepartmentController;
 use App\Http\Controllers\Api\DoctorController;
+use App\Http\Controllers\Api\AppointmentController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -32,4 +33,13 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::apiResource('departments', DepartmentController::class)->only(['index', 'show']);
     Route::apiResource('doctors', DoctorController::class)->only(['index', 'show']);
+
+    Route::controller(AppointmentController::class)->group(function () {
+        Route::get('/appointments/available', 'getAvailableAppointments'); //المواعيد المتاحة
+        Route::get('/appointments', 'index'); //مواعيدي
+        Route::post('/appointments', 'store'); //موعد جديد انشاء
+
+        Route::put('/appointments/{id}/cancel', 'cancel'); //الغاء موعد
+
+    });
 });
