@@ -38,8 +38,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/appointments/available', 'getAvailableAppointments'); //المواعيد المتاحة
         Route::get('/appointments', 'index'); //مواعيدي
         Route::post('/appointments', 'store'); //موعد جديد انشاء
-
         Route::put('/appointments/{id}/cancel', 'cancel'); //الغاء موعد
-
+        Route::get('/appointments/{id}', 'show'); //تفاصيل موعد
     });
 });

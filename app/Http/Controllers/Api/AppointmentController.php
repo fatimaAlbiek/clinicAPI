@@ -92,10 +92,20 @@ class AppointmentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+
+    public function show($id)
     {
-        //
+        $appointment = Appointment::with([
+            'doctor.user',
+            'doctor.department',
+            'patient.user'
+        ])->findOrFail($id);
+
+        return response()->json([
+            'appointment' => $appointment
+        ]);
     }
+
 
     /**
      * Update the specified resource in storage.
