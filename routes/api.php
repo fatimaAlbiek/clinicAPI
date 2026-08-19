@@ -37,7 +37,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/departments/{department_id}/doctors', [DoctorController::class, 'getDoctorByDepartment']); //عرض الاطباء حسب القسم
 
     Route::controller(AppointmentController::class)->group(function () {
-        Route::get('/appointments/available', 'getAvailableAppointments'); //المواعيد المتاحة
+        Route::get('/doctors/{doctor_id}/appointments/available', 'getAvailableAppointments'); //المواعيد المتاحة
         Route::get('/appointments', 'index'); //مواعيدي
         Route::post('/appointments', 'store'); //موعد جديد انشاء
         Route::put('/appointments/{id}/cancel', 'cancel'); //الغاء موعد

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Appointment;
+use App\Models\Doctor;
 
 class AppointmentController extends Controller
 {
@@ -156,19 +157,18 @@ class AppointmentController extends Controller
         ]);
     }
 
-    public function getAvailableAppointments(Request $request) //get available appointments for a specific doctor on a specific date
+    public function getAvailableAppointments(Request $request, $doctor_id)
     {
-        $request->validate([
-            'doctor_id' => 'required|exists:doctors,id',
-            'appointment_datetime' => 'required|date_format:Y-m-d|after_or_equal:today',
-        ]);
+        $doctorExists = Doctor::where('id', $doctor_id)->exists();
+        if (!$doctorExists) {
+            return response()->json(['success' => false, 'message' => 'Doctor not found'], 404);
+        }
 
-        $doctor_id = $request->doctor_id;
-        $appointment_datetime = $request->appointment_datetime;
 
         $availableAppointments = Appointment::where('doctor_id', $doctor_id)
-            ->whereDate('appointment_datetime', $appointment_datetime)
             ->where('status', 'available')
+            ->where('appointment_datetime', '>=', now())
+            ->orderBy('appointment_datetime', 'asc')     // ترتيب المواعيد من الأقرب للأبعد
             ->get();
 
         return response()->json([
