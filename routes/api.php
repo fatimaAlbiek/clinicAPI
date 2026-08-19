@@ -34,6 +34,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::apiResource('departments', DepartmentController::class)->only(['index', 'show']);
     Route::apiResource('doctors', DoctorController::class)->only(['index', 'show']);
+    Route::get('/departments/{department_id}/doctors', [DoctorController::class, 'getDoctorByDepartment']); //عرض الاطباء حسب القسم
 
     Route::controller(AppointmentController::class)->group(function () {
         Route::get('/appointments/available', 'getAvailableAppointments'); //المواعيد المتاحة

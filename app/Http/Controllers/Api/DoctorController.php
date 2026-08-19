@@ -57,4 +57,23 @@ class DoctorController extends Controller
     {
         //
     }
+    public function getDoctorByDepartment($department_id)
+    {
+
+        $doctors = Doctor::where('department_id', $department_id)->with('user')->get();
+
+        if ($doctors->isEmpty()) {
+            return response()->json(['status' => false, 'message' => 'لا يوجد أطباء في هذا القسم'], 404);
+        }
+
+        return response()->json([
+            'doctors' => $doctors->map(function ($doctor) {
+                return [
+                    'id' => $doctor->id,
+                    'name' => $doctor->user->name,
+
+                ];
+            })
+        ]);
+    }
 }
