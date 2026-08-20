@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Models\MedicalFile;
 
 class MedicalFileController extends Controller
 {
@@ -11,7 +13,19 @@ class MedicalFileController extends Controller
      */
     public function index()
     {
-        //
+        $patient = auth()->user()->patient;
+        if (!$patient) {
+            return response()->json(['message' => 'المستخدم غير مسجل كمريض'], 422);
+        }
+
+        $medicalFile = MedicalFile::where('patient_id', $patient->id)->with([
+            'requestedBy.user',
+            'requestedBy.department'
+        ])->latest()->get();
+        return response()->json([
+            'success' => true,
+            'data' => $medicalFile
+        ]);
     }
 
     /**

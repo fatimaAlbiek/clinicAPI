@@ -22,8 +22,8 @@ class UserSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'name' => 'أحمد الخالد',
-                'email' => 'ahmed@clinic.com',
+                'name' => 'ديما نجم',
+                'email' => 'dima@clinic.com',
                 'password' => Hash::make('123'),
                 'role' => 'doctor',
                 'approved' => true,
@@ -31,8 +31,8 @@ class UserSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'name' => 'سارة منصور',
-                'email' => 'sara@clinic.com',
+                'name' => 'نبوغ حميدي',
+                'email' => 'nobogh@clinic.com',
                 'password' => Hash::make('123'),
                 'role' => 'doctor',
                 'approved' => true,
@@ -40,8 +40,8 @@ class UserSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'name' => 'كريم العمر',
-                'email' => 'karim@clinic.com',
+                'name' => 'بيان مصطو',
+                'email' => 'bayan@clinic.com',
                 'password' => Hash::make('123'),
                 'role' => 'doctor',
                 'approved' => true,
@@ -50,8 +50,8 @@ class UserSeeder extends Seeder
             ],
 
             [
-                'name' => 'لينا حسن',
-                'email' => 'lina@clinic.com',
+                'name' => 'مريم الأحمد',
+                'email' => 'maryam@clinic.com',
                 'password' => Hash::make('123'),
                 'role' => 'doctor',
                 'approved' => true,
@@ -59,8 +59,8 @@ class UserSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'name' => 'عمر سالم',
-                'email' => 'omar@clinic.com',
+                'name' => 'سنا غريواتي',
+                'email' => 'sana@clinic.com',
                 'password' => Hash::make('123'),
                 'role' => 'doctor',
                 'approved' => true,

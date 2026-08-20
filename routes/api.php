@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\DoctorController;
 use App\Http\Controllers\Api\AppointmentController;
 use App\Http\Controllers\Api\PrescriptionController;
 use App\Http\Controllers\Api\ConsultationController;
+use App\Http\Controllers\Api\MedicalFileController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -46,6 +47,9 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::apiResource('prescriptions', PrescriptionController::class)->only(['index', 'show']);
+
     Route::post('/doctors/{doctor_id}/consultations', [ConsultationController::class, 'store']); //انشاء رسالة استشارة
     Route::get('/consultations', [ConsultationController::class, 'index']); //عرض جميع الاستشارات الخاصة بالمريض
+
+    Route::get('/medical-file', [MedicalFileController::class, 'index']); //عرض الملف الطبي للمريض
 });

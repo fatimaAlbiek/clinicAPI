@@ -141,7 +141,7 @@ class AppointmentController extends Controller
             ], 400);
         }
 
-        $appointment->status = 'cancelled';
+        $appointment->status = 'available';
         $appointment->save();
 
         return response()->json([
