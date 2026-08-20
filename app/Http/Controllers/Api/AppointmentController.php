@@ -44,13 +44,11 @@ class AppointmentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request) //create new appointment
+    public function store(Request $request)
     {
         $request->validate([
             'appointment_datetime' => 'required|date|after:now',
-
             'doctor_id' => 'required|exists:doctors,id',
-
         ]);
 
         $patient = auth()->user()->patient;
@@ -62,25 +60,22 @@ class AppointmentController extends Controller
             ], 422);
         }
 
-        $isBooked = Appointment::where('doctor_id', $request->doctor_id)
+        $appointment = Appointment::where('doctor_id', $request->doctor_id)
             ->where('appointment_datetime', $request->appointment_datetime)
-            ->where('status', '!=', 'cancelled')
-            ->exists();
+            ->where('status', 'available')
+            ->first();
 
-        if ($isBooked) {
+        if (!$appointment) {
             return response()->json([
                 'success' => false,
                 'message' => 'عذراً، هذا الموعد تم حجزه للتو من قبل مستخدم آخر.'
             ], 422);
         }
 
-
-        $appointment = Appointment::create([
-            'appointment_datetime' => $request->appointment_datetime,
+        $appointment->update([
             'status' => 'booked',
-            'diagnosis' => null, //الحجز الجديد لا يوجد تشخيص بعد
-            'doctor_id' => $request->doctor_id,
             'patient_id' => $patient->id,
+            'diagnosis' => null,
         ]);
 
         return response()->json([
@@ -89,7 +84,6 @@ class AppointmentController extends Controller
             'data' => $appointment
         ], 201);
     }
-
     /**
      * Display the specified resource.
      */
