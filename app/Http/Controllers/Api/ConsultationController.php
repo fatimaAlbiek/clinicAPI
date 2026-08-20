@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Consultation;
+use App\Models\Doctor;
 
 class ConsultationController extends Controller
 {
@@ -29,12 +30,19 @@ class ConsultationController extends Controller
     }
 
 
-    public function store(Request $request) //create message
+    public function store(Request $request, $doctor_id) //create message
     {
         $request->validate([
             'message' => 'required|string',
-            'doctor_id' => 'required|exists:doctors,id',
+
         ]);
+        $doctor = Doctor::find($doctor_id);
+        if (!$doctor) {
+            return response()->json([
+                'success' => false,
+                'message' => "الطبيب غير موجود"
+            ], 404);
+        }
         $patient = auth()->user()->patient;
         if (!$patient) {
             return response()->json(['success' => false, 'message' => "المستخدم غير مسجل كمريض"], 422);
@@ -42,7 +50,7 @@ class ConsultationController extends Controller
 
         $consultation = Consultation::create([
             'message' => $request->message,
-            'doctor_id' => $request->doctor_id,
+            'doctor_id' => $doctor->id,
             'patient_id' => $patient->id,
             'doctor_reply' => null,
             'status' => 'open',

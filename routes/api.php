@@ -46,6 +46,6 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::apiResource('prescriptions', PrescriptionController::class)->only(['index', 'show']);
-    Route::post('/consultations', [ConsultationController::class, 'store']); //انشاء رسالة استشارة
+    Route::post('/doctors/{doctor_id}/consultations', [ConsultationController::class, 'store']); //انشاء رسالة استشارة
     Route::get('/consultations', [ConsultationController::class, 'index']); //عرض جميع الاستشارات الخاصة بالمريض
 });
