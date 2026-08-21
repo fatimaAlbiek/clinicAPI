@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\AppointmentController;
 use App\Http\Controllers\Api\PrescriptionController;
 use App\Http\Controllers\Api\ConsultationController;
 use App\Http\Controllers\Api\MedicalFileController;
+use App\Http\Controllers\Api\ProfileController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -52,4 +53,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/consultations', [ConsultationController::class, 'index']); //عرض جميع الاستشارات الخاصة بالمريض
 
     Route::get('/medical-file', [MedicalFileController::class, 'index']); //عرض الملف الطبي للمريض
+
+    Route::get('/profile', [ProfileController::class, 'show']); //عرض الملف الشخصي للمريض
+    Route::put('/profile', [ProfileController::class, 'update']); //تحديث الملف الشخصي للمريض
 });
