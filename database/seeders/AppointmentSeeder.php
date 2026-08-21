@@ -9,14 +9,14 @@ class AppointmentSeeder extends Seeder
 {
     public function run(): void
     {
-        $ahmed = DB::table('doctors')
+        $dima = DB::table('doctors')
             ->join('users', 'doctors.user_id', '=', 'users.id')
-            ->where('users.email', 'ahmed@clinic.com')
+            ->where('users.email', 'dima@clinic.com')
             ->value('doctors.id');
 
-        $sara = DB::table('doctors')
+        $nobogh = DB::table('doctors')
             ->join('users', 'doctors.user_id', '=', 'users.id')
-            ->where('users.email', 'sara@clinic.com')
+            ->where('users.email', 'nobogh@clinic.com')
             ->value('doctors.id');
 
         $mohamed = DB::table('patients')
@@ -34,7 +34,7 @@ class AppointmentSeeder extends Seeder
                 'appointment_datetime' => '2026-09-10 09:00:00',
                 'status' => 'available',
                 'diagnosis' => null,
-                'doctor_id' => $ahmed,
+                'doctor_id' => $dima,
                 'patient_id' => null,
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -43,7 +43,7 @@ class AppointmentSeeder extends Seeder
                 'appointment_datetime' => '2026-09-10 10:00:00',
                 'status' => 'available',
                 'diagnosis' => null,
-                'doctor_id' => $ahmed,
+                'doctor_id' => $dima,
                 'patient_id' => null,
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -52,7 +52,7 @@ class AppointmentSeeder extends Seeder
                 'appointment_datetime' => '2026-09-10 11:00:00',
                 'status' => 'available',
                 'diagnosis' => null,
-                'doctor_id' => $ahmed,
+                'doctor_id' => $nobogh,
                 'patient_id' => null,
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -61,7 +61,7 @@ class AppointmentSeeder extends Seeder
                 'appointment_datetime' => '2026-09-11 09:00:00',
                 'status' => 'booked',
                 'diagnosis' => null,
-                'doctor_id' => $ahmed,
+                'doctor_id' => $dima,
                 'patient_id' => $mohamed,
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -71,7 +71,7 @@ class AppointmentSeeder extends Seeder
                 'appointment_datetime' => '2026-09-10 09:00:00',
                 'status' => 'available',
                 'diagnosis' => null,
-                'doctor_id' => $sara,
+                'doctor_id' => $nobogh,
                 'patient_id' => null,
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -80,7 +80,7 @@ class AppointmentSeeder extends Seeder
                 'appointment_datetime' => '2026-09-10 10:00:00',
                 'status' => 'available',
                 'diagnosis' => null,
-                'doctor_id' => $sara,
+                'doctor_id' => $nobogh,
                 'patient_id' => null,
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -89,7 +89,7 @@ class AppointmentSeeder extends Seeder
                 'appointment_datetime' => '2026-09-11 10:00:00',
                 'status' => 'booked',
                 'diagnosis' => null,
-                'doctor_id' => $sara,
+                'doctor_id' => $nobogh,
                 'patient_id' => $fatima,
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -98,7 +98,7 @@ class AppointmentSeeder extends Seeder
                 'appointment_datetime' => '2026-09-12 10:00:00',
                 'status' => 'completed',
                 'diagnosis' => 'التهاب حلق',
-                'doctor_id' => $sara,
+                'doctor_id' => $nobogh,
                 'patient_id' => $fatima,
                 'created_at' => now(),
                 'updated_at' => now(),

@@ -14,17 +14,38 @@ class MedicalFileController extends Controller
     public function index()
     {
         $patient = auth()->user()->patient;
+
         if (!$patient) {
-            return response()->json(['message' => 'المستخدم غير مسجل كمريض'], 422);
+            return response()->json([
+                'message' => 'المستخدم غير مسجل كمريض'
+            ], 422);
         }
 
-        $medicalFile = MedicalFile::where('patient_id', $patient->id)->with([
-            'requestedBy.user',
-            'requestedBy.department'
-        ])->latest()->get();
+        $medicalFiles = MedicalFile::where('patient_id', $patient->id)
+            ->with([
+                'requestedBy.user:id,name',
+                'performedBy.user:id,name',
+            ])
+            ->latest()
+            ->get();
+
+        $medicalFiles = $medicalFiles->map(function ($file) {
+            return [
+                'id' => $file->id,
+                'file_type' => $file->file_type,
+                'file_url' => $file->file_url,
+                'result' => $file->result,
+                'status' => $file->status,
+                'requested_by_name' => $file->requestedBy?->user?->name,
+                'performed_by_name' => $file->performedBy?->user?->name,
+                'created_at' => $file->created_at,
+                'updated_at' => $file->updated_at,
+            ];
+        });
+
         return response()->json([
             'success' => true,
-            'data' => $medicalFile
+            'data' => $medicalFiles
         ]);
     }
 

@@ -11,31 +11,31 @@ class DoctorSeeder extends Seeder
     {
         $doctors = [
             [
-                'email' => 'ahmed@clinic.com',
+                'email' => 'dima@clinic.com',
                 'mobile' => '0501234567',
                 'doctor_type' => 'General',
                 'department_id' => 1,
             ],
             [
-                'email' => 'sara@clinic.com',
+                'email' => 'nobogh@clinic.com',
                 'mobile' => '0507654321',
                 'doctor_type' => 'General',
                 'department_id' => 2,
             ],
             [
-                'email' => 'karim@clinic.com',
+                'email' => 'bayan@clinic.com',
                 'mobile' => '0509876543',
                 'doctor_type' => 'General',
                 'department_id' => 3,
             ],
             [
-                'email' => 'lina@clinic.com',
+                'email' => 'maryam@clinic.com',
                 'mobile' => '0501112233',
                 'doctor_type' => 'General',
                 'department_id' => 4,
             ],
             [
-                'email' => 'omar@clinic.com',
+                'email' => 'sana@clinic.com',
                 'mobile' => '0504445566',
                 'doctor_type' => 'Lab',
                 'department_id' => 5,
