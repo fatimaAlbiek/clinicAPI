@@ -12,7 +12,7 @@ class AppointmentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index() //my Appointments
+    public function index()
     {
         $patient = auth()->user()->patient;
 
@@ -23,14 +23,32 @@ class AppointmentController extends Controller
             ], 422);
         }
 
-        $appointments = Appointment::with('doctor')
+        $appointments = Appointment::with([
+            'doctor.user:id,name',
+            'doctor.department:id,name'
+        ])
             ->where('patient_id', $patient->id)
             ->orderBy('appointment_datetime', 'desc')
             ->get();
 
-        $upcoming = $appointments->where('appointment_datetime', '>=', now())->values();
-        $past = $appointments->where('appointment_datetime', '<', now())->values();
+        $appointments = $appointments->map(function ($appointment) {
+            return [
+                'id' => $appointment->id,
+                'appointment_datetime' => $appointment->appointment_datetime,
+                'status' => $appointment->status,
+                'diagnosis' => $appointment->diagnosis,
+                'doctor_name' => $appointment->doctor?->user?->name,
+                'department_name' => $appointment->doctor?->department?->name,
+            ];
+        });
 
+        $upcoming = $appointments
+            ->where('appointment_datetime', '>=', now())
+            ->values();
+
+        $past = $appointments
+            ->where('appointment_datetime', '<', now())
+            ->values();
 
         return response()->json([
             'success' => true,
