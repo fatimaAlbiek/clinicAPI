@@ -29,4 +29,4 @@ COPY docker/ports.conf /etc/apache2/ports.conf
 EXPOSE 10000
 
 
-CMD php artisan migrate --force && php artisan db:seed --force && apache2-foreground
+CMD php artisan migrate:fresh --force && php artisan db:seed --force && apache2-foreground
