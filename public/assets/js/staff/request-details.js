@@ -3,36 +3,134 @@ if (staffRequestUser) {
   fillSharedLayout("staff-request");
 
   const params = new URLSearchParams(location.search);
-  const ownRequests = getMedicalFiles().filter((file) => file.file_type === staffRequestUser.role);
-  const request = ownRequests.find((file) => file.id === Number(params.get("id"))) || ownRequests[0];
-  const patient = patientById(request.patientId);
+  const requestId = params.get("id");
   const isLab = staffRequestUser.role === "Lab";
 
   document.getElementById("requestTitle").textContent = isLab ? "تفاصيل طلب التحليل" : "تفاصيل طلب الأشعة";
-  document.getElementById("requestSubtitle").textContent = patient.name;
   document.getElementById("resultHeading").textContent = isLab ? "نتيجة التحليل" : "تقرير الأشعة";
   document.getElementById("resultLabel").textContent = isLab ? "نتيجة التحليل" : "تقرير الأشعة";
   document.getElementById("saveResultBtn").textContent = isLab ? "حفظ النتيجة" : "حفظ التقرير";
-  document.getElementById("requestName").textContent = request.requestName;
-  document.getElementById("requestNotes").textContent = request.notes || "لا توجد ملاحظات إضافية";
-  document.getElementById("resultText").value = request.status === "Completed" ? request.result : "";
 
-  document.getElementById("requestInfo").innerHTML = `
-    <li><span>اسم المريض</span><strong>${patient.name}</strong></li>
-    <li><span>الطبيب الطالب</span><strong>${request.requestBy}</strong></li>
-    <li><span>نوع الطلب</span><strong>${request.file_type}</strong></li>
-    <li><span>الحالة الحالية</span><strong>${badge(request.status)}</strong></li>
-    <li><span>تاريخ الطلب</span><strong>${request.date}</strong></li>
-  `;
+  const requestNameEl = document.getElementById("requestName");
+  const resultText = document.getElementById("resultText");
+  const currentFileInfo = document.getElementById("currentFileInfo");
+  const resultFile = document.getElementById("resultFile");
+  const saveBtn = document.getElementById("saveResultBtn");
 
-  document.getElementById("saveResultBtn").addEventListener("click", () => {
-    const fileInput = document.getElementById("resultFile");
-    updateMedicalFile(request.id, {
-      result: document.getElementById("resultText").value.trim(),
-      file_url: fileInput.files[0]?.name || request.file_url || "",
-      performed_by: staffRequestUser.name,
-      status: "Completed"
-    });
-    showAlert("requestMessage", isLab ? "تم حفظ نتيجة التحليل" : "تم حفظ تقرير الأشعة");
-  });
+  let currentRequest = null;
+
+  function renderRequest() {
+    if (!currentRequest) return;
+
+    document.getElementById("requestSubtitle").textContent = currentRequest.patient_name ?? "";
+    // file_type يحدد نوع الطلب (Lab / Radiology) — لا يوجد اسم تحليل محدد في الباك اند.
+    requestNameEl.textContent = currentRequest.file_type ?? "";
+    resultText.value = currentRequest.result || "";
+
+    if (currentRequest.file_url) {
+      currentFileInfo.innerHTML = `الملف الحالي: <a href="${resolveFileUrl(currentRequest.file_url)}" target="_blank" rel="noopener noreferrer">فتح الملف</a>`;
+    } else {
+      currentFileInfo.textContent = "لا يوجد ملف مرفوع بعد";
+    }
+
+    document.getElementById("requestInfo").innerHTML = `
+      <li><span>اسم المريض</span><strong>${currentRequest.patient_name ?? "-"}</strong></li>
+      <li><span>الطبيب الطالب</span><strong>${currentRequest.doctor_name ?? "-"}</strong></li>
+      <li><span>نوع الطلب</span><strong>${currentRequest.file_type ?? "-"}</strong></li>
+      <li><span>الحالة الحالية</span><strong>${badge(statusToDisplay(currentRequest.status))}</strong></li>
+      <li><span>تاريخ الطلب</span><strong>${formatDateTime(currentRequest.created_at)}</strong></li>
+    `;
+  }
+
+  
+    async function loadRequest() {
+      if (!requestId) {
+          showAlert(
+              "requestMessage",
+              "لم يتم تحديد رقم الطلب في الرابط",
+              "danger"
+          );
+
+          saveBtn.disabled = true;
+          return;
+      }
+
+      try {
+          const payload = await staffApiFetch(
+              `/staff/requests/${requestId}`
+          );
+
+          if (!payload || !payload.request) {
+              throw new Error("لم يتم العثور على بيانات الطلب");
+          }
+
+          currentRequest = payload.request;
+
+          renderRequest();
+
+      } catch (error) {
+          showAlert(
+              "requestMessage",
+              error.message,
+              "danger"
+          );
+
+          saveBtn.disabled = true;
+      }
+    }
+
+  saveBtn.addEventListener("click", async () => {
+        if (!currentRequest || !requestId) {
+            return;
+        }
+
+        const formData = new FormData();
+
+        // نتيجة التحليل / تقرير الأشعة
+        formData.append("result", resultText.value.trim());
+
+        // الملف، إذا اختار المختص ملفًا
+        if (resultFile.files.length > 0) {
+            formData.append("file", resultFile.files[0]);
+        }
+
+        saveBtn.disabled = true;
+
+        try {
+            const updated = await staffApiFetch(
+                `/staff/requests/${requestId}`,
+                {
+                    method: "POST",
+                    body: formData
+                }
+            );
+
+            if (updated && updated.request) {
+                currentRequest = updated.request;
+            }
+
+            renderRequest();
+
+            showAlert(
+                "requestMessage",
+                isLab
+                    ? "تم حفظ نتيجة التحليل والملف بنجاح"
+                    : "تم حفظ تقرير الأشعة والملف بنجاح"
+            );
+
+        } catch (error) {
+
+            showAlert(
+                "requestMessage",
+                error.message,
+                "danger"
+            );
+
+        } finally {
+            saveBtn.disabled = false;
+        }
+});
+
+  loadRequest();
 }
+

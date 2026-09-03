@@ -1,16 +1,6 @@
 <?php
 
-use App\Http\Controllers\AppointmentController;
-use App\Http\Controllers\ConsultationController;
-use App\Http\Controllers\DepartmentController;
-use App\Http\Controllers\DoctorController;
-use App\Http\Controllers\MedicalFileController;
-use App\Http\Controllers\PatientController;
-use App\Http\Controllers\PrescriptionController;
-use App\Http\Controllers\UserController;
-
 use Illuminate\Support\Facades\Route;
-use Symfony\Component\Routing\Annotation\Route as AnnotationRoute;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,6 +13,11 @@ use Symfony\Component\Routing\Annotation\Route as AnnotationRoute;
 |
 */
 
+// Route::get('/', function () {
+//     return view('login');
+// });
+use Illuminate\Support\Facades\File;
+
 Route::get('/', function () {
-    return view('login');
+    return File::get(public_path('index.html'));
 });

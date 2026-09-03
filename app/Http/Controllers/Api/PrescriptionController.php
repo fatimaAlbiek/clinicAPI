@@ -9,14 +9,24 @@ use App\Models\Prescription;
 class PrescriptionController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * عرض وصفات المريض
      */
     public function index()
     {
         $patient = auth()->user()->patient;
-        $prescriptions = Prescription::with('appointment.doctor')->whereHas('appointment', function ($query) use ($patient) {
-            $query->where('patient_id', $patient->id);
-        })->get();
+
+        if (!$patient) {
+            return response()->json([
+                'success' => false,
+                'message' => 'المستخدم غير مسجل كمريض'
+            ], 422);
+        }
+
+        $prescriptions = Prescription::with('appointment.doctor')
+            ->whereHas('appointment', function ($query) use ($patient) {
+                $query->where('patient_id', $patient->id);
+            })
+            ->get();
 
         return response()->json([
             'precreption' => $prescriptions
@@ -24,22 +34,48 @@ class PrescriptionController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * إنشاء وصفة من قبل الطبيب
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'appointment_id' => 'required|exists:appointments,id',
+            'items' => 'required|array'
+        ]);
+
+        foreach ($request->items as $item) {
+            Prescription::create([
+                'appointment_id' => $request->appointment_id,
+                'medication' => $item['medication'],
+                'dosage' => $item['dosage'],
+                'instruction' => $item['instruction'],
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'Prescription saved successfully'
+        ], 201);
     }
 
     /**
-     * Display the specified resource.
+     * عرض وصفة محددة للمريض
      */
     public function show($id)
     {
         $patient = auth()->user()->patient;
-        $prescription = Prescription::with('appointment')->whereHas('appointment', function ($query) use ($patient) {
-            $query->where('patient_id', $patient->id);
-        })->findOrFail($id);
+
+        if (!$patient) {
+            return response()->json([
+                'success' => false,
+                'message' => 'المستخدم غير مسجل كمريض'
+            ], 422);
+        }
+
+        $prescription = Prescription::with('appointment')
+            ->whereHas('appointment', function ($query) use ($patient) {
+                $query->where('patient_id', $patient->id);
+            })
+            ->findOrFail($id);
 
         return response()->json([
             'prescription' => $prescription

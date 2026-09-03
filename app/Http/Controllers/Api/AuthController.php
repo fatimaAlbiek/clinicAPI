@@ -10,8 +10,6 @@ use App\Models\Patient;
 
 class AuthController extends Controller
 {
-
-
     public function register(Request $request)
     {
         $request->validate([
@@ -41,77 +39,52 @@ class AuthController extends Controller
         ]);
 
         $token = $user->createToken('mobile-app')->plainTextToken;
+
         return response()->json([
             'message' => 'User registered successfully',
             'access_token' => $token,
             'token_type' => 'Bearer',
         ], 201);
     }
+
     public function login(Request $request)
     {
-
         $request->validate([
             'email' => 'required|email',
             'password' => 'required|min:8'
         ]);
 
-
-
         $user = User::where('email', $request->email)->first();
 
-
-
         if (!$user || !Hash::check($request->password, $user->password)) {
-
             return response()->json([
                 'message' => 'البريد الإلكتروني أو كلمة المرور غير صحيحة'
             ], 401);
         }
 
-
-
-        if (!$user->approved) { //0
-
+        if (!$user->approved) {
             return response()->json([
                 'message' => 'الحساب غير مفعل'
             ], 403);
         }
 
-
-
         $token = $user->createToken('clinic-token')->plainTextToken;
 
-
-
         return response()->json([
-
             'token' => $token,
-
-
             'user' => [
-
                 'id' => $user->id,
-
                 'name' => $user->name,
-
                 'email' => $user->email,
-
                 'role' => $user->role,
-
                 'doctor_type' => $user->doctor->doctor_type ?? null
-
             ]
-
         ]);
     }
 
-
-
     public function logout(Request $request)
     {
-
         $request->user()->tokens()->delete();
-
 
         return response()->json([
             'message' => 'تم تسجيل الخروج'
