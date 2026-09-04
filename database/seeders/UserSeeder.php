@@ -15,7 +15,7 @@ class UserSeeder extends Seeder
             [
                 'name' => 'Admin',
                 'email' => 'admin@clinic.com',
-                'password' => Hash::make('0000'),
+                'password' => Hash::make('00000000'),
                 'role' => 'admin',
                 'approved' => true,
                 'created_at' => now(),
@@ -24,7 +24,7 @@ class UserSeeder extends Seeder
             [
                 'name' => 'ديما نجم',
                 'email' => 'dima@clinic.com',
-                'password' => Hash::make('123'),
+                'password' => Hash::make('12345678'),
                 'role' => 'doctor',
                 'approved' => true,
                 'created_at' => now(),
@@ -33,7 +33,7 @@ class UserSeeder extends Seeder
             [
                 'name' => 'نبوغ حميدي',
                 'email' => 'nobogh@clinic.com',
-                'password' => Hash::make('123'),
+                'password' => Hash::make('12345678'),
                 'role' => 'doctor',
                 'approved' => true,
                 'created_at' => now(),
@@ -42,7 +42,7 @@ class UserSeeder extends Seeder
             [
                 'name' => 'بيان مصطو',
                 'email' => 'bayan@clinic.com',
-                'password' => Hash::make('123'),
+                'password' => Hash::make('12345678'),
                 'role' => 'doctor',
                 'approved' => true,
                 'created_at' => now(),
@@ -52,7 +52,7 @@ class UserSeeder extends Seeder
             [
                 'name' => 'مريم الأحمد',
                 'email' => 'maryam@clinic.com',
-                'password' => Hash::make('123'),
+                'password' => Hash::make('12345678'),
                 'role' => 'doctor',
                 'approved' => true,
                 'created_at' => now(),
@@ -61,7 +61,7 @@ class UserSeeder extends Seeder
             [
                 'name' => 'سنا غريواتي',
                 'email' => 'sana@clinic.com',
-                'password' => Hash::make('123'),
+                'password' => Hash::make('12345678'),
                 'role' => 'doctor',
                 'approved' => true,
                 'created_at' => now(),
@@ -70,7 +70,7 @@ class UserSeeder extends Seeder
             [
                 'name' => 'نور الدين',
                 'email' => 'noor@clinic.com',
-                'password' => Hash::make('123'),
+                'password' => Hash::make('12345678'),
                 'role' => 'doctor',
                 'approved' => true,
                 'created_at' => now(),
