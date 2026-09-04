@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -11,15 +10,13 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
-        DB::table('users')->insert([
+        $users = [
             [
                 'name' => 'Admin',
                 'email' => 'admin@clinic.com',
                 'password' => Hash::make('00000000'),
                 'role' => 'admin',
                 'approved' => true,
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
             [
                 'name' => 'ديما نجم',
@@ -27,8 +24,6 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('12345678'),
                 'role' => 'doctor',
                 'approved' => true,
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
             [
                 'name' => 'نبوغ حميدي',
@@ -36,8 +31,6 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('12345678'),
                 'role' => 'doctor',
                 'approved' => true,
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
             [
                 'name' => 'بيان مصطو',
@@ -45,18 +38,13 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('12345678'),
                 'role' => 'doctor',
                 'approved' => true,
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
-
             [
                 'name' => 'مريم الأحمد',
                 'email' => 'maryam@clinic.com',
                 'password' => Hash::make('12345678'),
                 'role' => 'doctor',
                 'approved' => true,
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
             [
                 'name' => 'سنا غريواتي',
@@ -64,8 +52,6 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('12345678'),
                 'role' => 'doctor',
                 'approved' => true,
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
             [
                 'name' => 'نور الدين',
@@ -73,8 +59,6 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('12345678'),
                 'role' => 'doctor',
                 'approved' => true,
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
             [
                 'name' => 'محمد علي',
@@ -82,8 +66,6 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('password123'),
                 'role' => 'patient',
                 'approved' => true,
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
             [
                 'name' => 'فاطمة حسن',
@@ -91,8 +73,6 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('password123'),
                 'role' => 'patient',
                 'approved' => true,
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
             [
                 'name' => 'خالد أحمد',
@@ -100,9 +80,20 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('password123'),
                 'role' => 'patient',
                 'approved' => true,
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
-        ]);
+        ];
+
+        foreach ($users as $user) {
+            DB::table('users')->updateOrInsert(
+                ['email' => $user['email']],
+                [
+                    'name' => $user['name'],
+                    'password' => $user['password'],
+                    'role' => $user['role'],
+                    'approved' => $user['approved'],
+                    'updated_at' => now(),
+                ]
+            );
+        }
     }
 }

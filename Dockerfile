@@ -7,8 +7,8 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libonig-dev \
     libxml2-dev \
-libpq-dev \
-&& docker-php-ext-install pdo_mysql pdo_pgsql mbstring exif pcntl bcmath gd zip
+    libpq-dev \
+    && docker-php-ext-install pdo_mysql pdo_pgsql mbstring exif pcntl bcmath gd zip
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
@@ -24,7 +24,7 @@ RUN a2enmod rewrite
 
 COPY docker/000-default.conf /etc/apache2/sites-available/000-default.conf
 COPY docker/ports.conf /etc/apache2/ports.conf
+
 EXPOSE 10000
 
-
-CMD php artisan serve migrate:fresh --seed --force && apache2-foreground
+CMD ["apache2-foreground"]
