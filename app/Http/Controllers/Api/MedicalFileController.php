@@ -54,40 +54,55 @@ class MedicalFileController extends Controller
      * إنشاء طلب ملف طبي من قبل الطبيب
      */
     public function store(Request $request)
-    {
-        $request->validate([
-            'patient_id'   => 'required|exists:patients,id',
-            'file_type'    => 'required|in:Lab,Radiology',
-            'request_name' => 'required|string|max:255',
-            'notes'        => 'nullable|string',
-        ]);
+{
+    $request->validate([
+        'patient_id'   => 'required|exists:patients,id',
+        'file_type'    => 'required|in:Lab,Radiology',
+        'request_name' => 'required|string|max:255',
+        'notes'        => 'nullable|string',
+        'file'         => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:10240',
+    ]);
 
-        $doctor = Auth::user()->doctor;
+    $doctor = Auth::user()->doctor;
 
-        if (!$doctor) {
-            return response()->json([
-                'message' => 'المستخدم غير مسجل كطبيب'
-            ], 422);
-        }
-
-        MedicalFile::create([
-            'patient_id'   => $request->patient_id,
-            'requested_by' => $doctor->id,
-            'performed_by' => null,
-            'file_type'    => $request->file_type,
-            'file_url'     => $request->request_name,
-            'result'       => $request->notes,
-            'status'       => 'pending',
-        ]);
-
+    if (!$doctor) {
         return response()->json([
-            'message' => 'Medical file request created successfully'
-        ], 201);
+            'message' => 'المستخدم غير مسجل كطبيب'
+        ], 422);
     }
 
-    /**
-     * Display the specified resource.
-     */
+    $fileUrl = null;
+
+    if ($request->hasFile('file')) {
+        $uploadedFile = $request->file('file');
+
+        $result = cloudinary()->uploadApi()->upload(
+            $uploadedFile->getRealPath(),
+            [
+                'folder' => 'clinic/medical_files',
+                'resource_type' => 'auto',
+            ]
+        );
+
+        $fileUrl = $result['secure_url'];
+    }
+
+    $medicalFile = MedicalFile::create([
+        'patient_id'   => $request->patient_id,
+        'requested_by' => $doctor->id,
+        'performed_by' => null,
+        'file_type'    => $request->file_type,
+        'file_url'     => $fileUrl,
+        'result'       => $request->notes,
+        'status'       => $fileUrl ? 'done' : 'pending',
+    ]);
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Medical file created successfully',
+        'data' => $medicalFile
+    ], 201);
+}
     public function show(string $id)
     {
         //
