@@ -27,4 +27,4 @@ COPY docker/ports.conf /etc/apache2/ports.conf
 
 EXPOSE 10000
 
-CMD ["sh", "-c", "php artisan db:seed --class=UserSeeder --force && apache2-foreground"]
+CMD ["sh", "-c", "php artisan db:seed --class=MedicalFileSeeder --force && apache2-foreground"]
